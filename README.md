@@ -90,19 +90,19 @@ Analog 5 = Temperature front
 
 Analog 6 = Temperature back
 
-Analog 7 =
+Analog 7 = ?
 
-Analog 8 =
+Analog 8 = ?
 
 ## Switches
 
-Switch 1 = 
+Switch 1 = ?
 
-Switch 2 = 
+Switch 2 = ?
 
-Switch 3 =
+Switch 3 = ?
 
-Switch 4 = 
+Switch 4 = ?
 
 
 

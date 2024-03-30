@@ -105,5 +105,14 @@ Switch 3 = ?
 
 Switch 4 = ?
 
+# How to use
+
+Install python
+
+intstall matplotlib
+install pyserial
+
+python parse_legacy.py  RUNDATA/MOSTEN20.ABQ/RUNTUE1.ABQ
+
 
 

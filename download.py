@@ -5,12 +5,13 @@ import datetime
 import serial
 
 # COM port settings
-DEFAULT_COM_PORT = 'COM1'  # Change this to your COM port
+DEFAULT_COM_PORT = 'COM4'  # Change this to your COM port
 BAUD_RATE = 9600
 
 def download(port, event):
     """Function downloading data"""
     ser = None
+    sync = None
     try:
         # Open COM port
         ser = serial.Serial(port, BAUD_RATE, timeout=1)
@@ -28,9 +29,12 @@ def download(port, event):
                 # Read binary data from COM port
                 data = ser.read(1)
                 if data:
-                    # Write binary data to file
-                    file.write(data)
-                    file.flush()  # Ensure data is written immediately
+                    if data[0] == 0xAA:
+                        sync = True
+                    if sync:
+                        # Write binary data to file
+                        file.write(data)
+                        file.flush()  # Ensure data is written immediately
     except serial.SerialException as e:
         print(f"Error: {e}")
     finally:

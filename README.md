@@ -26,16 +26,18 @@ S3 Not in use in current setup
 
 | RPM  | Hz  | HEX   | Decimal |
 |------|-----|-------|---------|
-| 100  | 3.3 | 0x7512|         | 
-| 200  | 6.6 | 0x3B13|         | 
+| 100  | 3.3 | 0x7512|  29970  | 
+| 200  | 6.6 | 0x3B13|  15123  | 
 | 300  | 10  |       |         | 
 | 500  | 20  |       |         | 
-|1000  | 33.3| 0xB6E |         | 
-|2000  | 66.6| 0x5D9 |         | 
-|4000  | 133 | 0x2ED |         | 
+|1000  | 33.3| 0xB6E |   2926  | 
+|2000  | 66.6| 0x5D9 |   1497  | 
+|4000  | 133 | 0x2ED |    749  | 
 |5000  | 166 |       |         | 
-|8000  | 267 | 0x174 |         | 
+|8000  | 267 | 0x174 |    372  | 
 |10000 | 333 |       |         | 
+
+rpm = 300000 / x
 
 ## S4 RPM 
 This channel is reversed (higher frequency/RPM -> higher hex value)
@@ -44,9 +46,9 @@ S4 is front of clutch
 
 | RPM  | Hz  | HEX    | Decimal |
 |------|-----|--------|---------|
-|2000  | 66.6| 0x7E4  |         |
-|4000  | 133 | 0xF9E  |         |
-|8000  | 267 | 0x1F71 |         |
+|2000  | 66.6| 0x7E4  |   2020  |
+|4000  | 133 | 0xF9E  |   3998  |
+|8000  | 267 | 0x1F71 |   8049  |
 
 ## Battery voltage
 
@@ -91,7 +93,7 @@ Analog 5 = Temperature front
 
 Analog 6 = Temperature back
 
-Analog 7 = ?
+Analog 7 = 
 
 Analog 8 = ?
 
@@ -114,10 +116,11 @@ CHUNK_SIZE = 38 bytes
 
 # How to use
 
-Install python
+Install python 3.xx
 
-intstall matplotlib
-install pyserial
+    pip install matplotlib
+    pip install pyserial
+    pip install pyqt6
 
 python parse_legacy.py  RUNDATA/MOSTEN20.ABQ/RUNTUE1.ABQ
 

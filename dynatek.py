@@ -3,7 +3,9 @@ import sys
 import download as dynalog
 import plot as dynaplot
 
-from PyQt6.QtCore import Qt, QObject, pyqtSignal, QThread
+from PyQt6.QtCore import Qt, QObject, pyqtSignal, QThread, QSize
+
+#from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton
 
 # from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
@@ -61,9 +63,10 @@ class Worker(QObject):
     def do_work(self):
         # while not self.stop_signal.is_set():
         self.main_window.current_file = dynalog.download(self.main_window.line_edit_com_port.text(), self.main_window.line_edit_event.text(), self.progress)
-
+        self.main_window.line_edit_file.setText(self.main_window.current_file)
+    
     def progress(self, state, pct):
-        self.update_progress.emit(state, 100 * pct // 62235 )
+        self.update_progress.emit(state, pct)
 
 
 # Subclass QMainWindow to customize your application's main window
@@ -72,6 +75,8 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Dynatek Datalogger")
+
+        self.setFixedSize(QSize(400, 300))
 
         layout = QVBoxLayout()
         # widgets = [
@@ -131,8 +136,16 @@ class MainWindow(QMainWindow):
         self.lbl_download_state = QLabel()
         self.lbl_download_state.setText("")
 
+        self.line_edit_file = QLineEdit()
+        file_layout = QHBoxLayout()
+        file_layout.addWidget(QLabel("File"))
+        file_layout.addWidget(self.line_edit_file)
+        self.line_edit_file.setText(self.current_file)
+
+        layout.addLayout(file_layout)
+
         self.btn_plot = QPushButton()
-        self.btn_plot.setEnabled(False)
+        self.btn_plot.setEnabled(True)
         self.btn_plot.setText("Plot")
         self.btn_plot.clicked.connect(self.plot_clicked)
 
@@ -147,10 +160,10 @@ class MainWindow(QMainWindow):
         self.worker.update_progress.connect(self.update_progress)
 
     def update_progress(self, state, percentage):
-        print(percentage)
+        #print(percentage)
         self.progress_download.setValue(percentage)
         self.lbl_download_state.setText(state)
-        if state == "Done" or percentage == 100:
+        if state == "Done":
             self.btn_download.setEnabled(True)
             self.btn_plot.setEnabled(True)
             self.lbl_download_state.setText("Done")
@@ -166,10 +179,11 @@ class MainWindow(QMainWindow):
 
     def plot_clicked(self):
         """v"""
-        print("Plot")
+        print(f"Plotting : {self.current_file}")
         #print(self.current_file)
         #if self.current_file > 0:
-        dynaplot.parse_file(self.current_file, 27, 0)
+        data_points = dynaplot.parse_file(self.current_file, 27, 0)
+        dynaplot.plot(data_points, self.current_file)
 
 
 app = QApplication(sys.argv)

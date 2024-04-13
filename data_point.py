@@ -30,7 +30,7 @@ class DataPoint:
         self.ana_ch3 = unpacked_data[8]
         self.ana_ch4 = unpacked_data[9]
         self.s3_rpm = unpacked_data[10]
-        self.s3_rpm = unpacked_data[11]
+        self.s4_rpm = unpacked_data[11]
         self.ana_ch12 = unpacked_data[12]
         self.ana_ch11 = unpacked_data[13]
         self.ana_ch10 = unpacked_data[14]
@@ -61,7 +61,7 @@ class DataPoint:
         self.ana_ch3 = unpacked_data[8]
         self.ana_ch4 = unpacked_data[9] # Gas spjeld
         self.s3_rpm = unpacked_data[10]
-        self.s3_rpm = unpacked_data[11]
+        self.s4_rpm = unpacked_data[11]
         self.ana_ch12 = unpacked_data[12]
         self.ana_ch11 = unpacked_data[13]
         self.ana_ch10 = unpacked_data[14]

@@ -39,10 +39,13 @@ def download(port, event, progress_cb):
                             file.flush()  # Ensure data is written immediately
                         data_count += 1
                         if progress_cb is not None:
-                            progress_cb("Downloading", data_count)
+                            progress_cb("Downloading", 100 * data_count // 62235)
                     else:
                         break
                     if data_count == 62235:
+                        if progress_cb is not None:
+                            progress_cb("Done", 100 * data_count // 62235)
+                        # TODO listen for FFFF sample id
                         return output_file
                     time.sleep(0.0001)
     else:

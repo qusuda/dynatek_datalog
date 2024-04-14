@@ -9,7 +9,9 @@ import time
 DEFAULT_COM_PORT = 'COM4'  # Change this to your COM port
 BAUD_RATE = 9600
 
-sim_file = "data/event_2024-04-07_14-12-52_switch_1_2_3_4.log"
+
+#sim_file = "data/event_2024-04-07_14-12-52_switch_1_2_3_4.log"
+sim_file = ""
 
 def download(port, event, progress_cb):
     """Function downloading data"""
@@ -54,13 +56,14 @@ def download(port, event, progress_cb):
             ser = serial.Serial(port, BAUD_RATE, timeout=1)
             if ser.is_open:
                 print(f"Serial port {port} opened successfully.")
-
+            print ("COM port opened")
             # Open file for writing binary data
             with open(output_file, 'wb') as file:
                 print(f"Writing binary data from {port} to {output_file}...")
                 while True:
                     # Read binary data from COM port
                     data = ser.read(1)
+                    #print(data)
                     if data:
                         if data[0] == 0xAA:
                             sync = True
@@ -68,14 +71,23 @@ def download(port, event, progress_cb):
                             # Write binary data to file
                             file.write(data)
                             file.flush()  # Ensure data is written immediately
+                        data_count += 1
+                        if progress_cb is not None:
+                            progress_cb("Downloading", 100 * data_count // 62235)
+                    # else:
+                    #     break
+                    if data_count == 62235:
+                        if progress_cb is not None:
+                            progress_cb("Done", 100 * data_count // 62235)
+                        # TODO listen for FFFF sample id
+                        return output_file
         except serial.SerialException as e:
             print(f"Error: {e}")
         finally:
             if ser and ser.is_open:
                 ser.close()
                 print(f"Serial port {port} closed.")
-    #if progress_cb is not None:
-    #    progress_cb("Done", 50)
+
     return output_file
 
 if __name__ == "__main__":

@@ -15,16 +15,17 @@ class DataPoint:
         #<55_8BIT>
         struct_format = '>BBHHBBBBBBHHBBBBBBBBHB'
         unpacked_data = struct.unpack(struct_format, chunk_data)
+        print(unpacked_data[0], unpacked_data[1],unpacked_data[2], unpacked_data[3])
         # Assign to members
         self.start_byte_1 = unpacked_data[0]
         self.start_byte_2 = unpacked_data[1]
-        self.rwhl_rpm = unpacked_data[2]
-        self.tach_rpm = unpacked_data[3]
+        self.rwhl_rpm = 3000000 / unpacked_data[2]
+        self.tach_rpm = 3000000 / unpacked_data[3]
         self.switch1 = bool(unpacked_data[4] & 4)
         self.switch2 = bool(unpacked_data[4] & 8)
         self.switch3 = bool(unpacked_data[4] & 16)
         self.switch4 = bool(unpacked_data[4] & 32)
-        self.battery_voltage = unpacked_data[5]
+        self.battery_voltage = unpacked_data[5] * 60.6 / 1000 
         self.ana_ch1 = unpacked_data[6]
         self.ana_ch2 = unpacked_data[7]
         self.ana_ch3 = unpacked_data[8]
@@ -46,11 +47,12 @@ class DataPoint:
         """ Init data point from raw serial data chunk"""
         struct_format = '>BBHHBBBBBBHHBBBBBBBBHB'
         unpacked_data = struct.unpack(struct_format, chunk_data)
+        print(unpacked_data[3])
         # Assign to members
         self.start_byte_1 = unpacked_data[0]
         self.start_byte_2 = unpacked_data[1]
         self.rwhl_rpm = 300000 / unpacked_data[2] # RPM
-        self.tach_rpm = 300000 / unpacked_data[3] # RPM
+        self.tach_rpm = unpacked_data[3] # RPM
         self.switch1 = bool(unpacked_data[4] & 4)
         self.switch2 = bool(unpacked_data[4] & 8)
         self.switch3 = bool(unpacked_data[4] & 16)

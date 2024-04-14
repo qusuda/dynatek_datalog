@@ -182,6 +182,7 @@ class MainWindow(QMainWindow):
         print(f"Plotting : {self.current_file}")
         #print(self.current_file)
         #if self.current_file > 0:
+        self.current_file = self.line_edit_file.text() 
         data_points = dynaplot.parse_file(self.current_file, 27, 0)
         dynaplot.plot(data_points, self.current_file)
 

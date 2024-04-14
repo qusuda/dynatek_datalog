@@ -19,7 +19,7 @@ def parse_file(input_file, chunk_size, offset):
         while True:
             # Read the chunk
             chunk_data = f.read(chunk_size)
-            print(chunk_data.hex())
+            #print(chunk_data.hex())
             # Check if chunk is not empty
             if chunk_data and len(chunk_data) == chunk_size:
                 if chunk_data[0] == 0xAA:
@@ -46,6 +46,8 @@ def plot(data_points, event):
 
     ana_ch1 = [data_point.ana_ch1 for data_point in data_points]
     ana_ch2 = [data_point.ana_ch2 for data_point in data_points]
+    ana_ch4 = [data_point.ana_ch4 for data_point in data_points]
+    
     ana_ch5 = [data_point.ana_ch5 for data_point in data_points]
     ana_ch6 = [data_point.ana_ch6 for data_point in data_points]
 
@@ -70,7 +72,7 @@ def plot(data_points, event):
     axis[1].plot(sample_ids, s4_rpms , color='grey', label='S4')
     axis[1].plot(sample_ids, s4_rpms , color='cyan', label='Clutch slip')
     axis[1].get_xaxis().set_visible(False)
-    axis[1].set_ylim(2000, 8000)
+    axis[1].set_ylim(0, 8000)
     axis[1].legend(loc='upper center', bbox_to_anchor=(0.5, -0.0), ncol=4) # bbox_to_anchor=(0.5, -0.3)
 
     axis[2].set_ylabel("Temperature [C]", color= "orange")
@@ -83,13 +85,14 @@ def plot(data_points, event):
 
     axis[3].set_ylabel("Fuel pressure", color= "cyan")
     axis[3].plot(sample_ids, ana_ch1 , color='cyan')
+    axis[3].plot(sample_ids, ana_ch4 , color='magenta')
     axis[3].get_xaxis().set_visible(False)
     axis[3].set_ylim(0, 400)
 
     axis[4].set_ylabel("G force", color= "green")
     axis[4].plot(sample_ids, ana_ch2 , color='green')
     axis[4].get_xaxis().set_visible(False)
-    axis[4].set_ylim(-1, 4)
+    axis[4].set_ylim(0, 400)
 
     axis[5].set_ylabel("Switch", color= "blue")
     axis[5].plot(sample_ids, switch1, label='SWITCH 1')

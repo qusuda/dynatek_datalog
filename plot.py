@@ -61,7 +61,7 @@ def plot(data_points, event):
     fig, axis = plt.subplots(6, 1)
     plt.suptitle(f"{event}", y=0.95)
 
-    axis[0].set_ylabel("Voltage [mV]", color= "purple")
+    axis[0].set_ylabel("Voltage", color= "purple")
     axis[0].plot(sample_ids, battey_voltage, color='purple')
     axis[0].get_xaxis().set_visible(False)
     axis[0].set_ylim(10, 14)
@@ -70,7 +70,7 @@ def plot(data_points, event):
     axis[1].plot(sample_ids, tach_rpms , color='blue', label='TACH')
     axis[1].plot(sample_ids, rwhl_rpms , color='magenta', label='RWHL')
     axis[1].plot(sample_ids, s4_rpms , color='grey', label='S4')
-    axis[1].plot(sample_ids, s4_rpms , color='cyan', label='Clutch slip')
+    #axis[1].plot(sample_ids, s4_rpms , color='cyan', label='Clutch slip')
     axis[1].get_xaxis().set_visible(False)
     axis[1].set_ylim(0, 8000)
     axis[1].legend(loc='upper center', bbox_to_anchor=(0.5, -0.0), ncol=4) # bbox_to_anchor=(0.5, -0.3)

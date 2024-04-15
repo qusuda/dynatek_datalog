@@ -85,17 +85,17 @@ Analog 1 = Fuel pressure
 
 Analog 2 = G-force
 
-Analog 3 = ??
+Analog 3 = Oil pressure
 
-Analog 4 = Gas spjeld
+Analog 4 = Gas handle
 
 Analog 5 = Temperature front
 
 Analog 6 = Temperature back
 
-Analog 7 = 
+Analog 7 = Not in use
 
-Analog 8 = ?
+Analog 8 = Not in use
 
 ## Switches
 

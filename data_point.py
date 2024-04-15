@@ -15,7 +15,7 @@ class DataPoint:
         #<55_8BIT>
         struct_format = '>BBHHBBBBBBHHBBBBBBBBHB'
         unpacked_data = struct.unpack(struct_format, chunk_data)
-        print(f'TACH: {unpacked_data[3]} R_WHL: {unpacked_data[2]} S4: {unpacked_data[11]}')
+        print(f'TACH: {unpacked_data[3]} R_WHL: {unpacked_data[2]} S4: {unpacked_data[11]} AN1 {unpacked_data[6]} AN2 {unpacked_data[7]} AN3 {unpacked_data[8]} AN4 {unpacked_data[9]}')
         # Assign to members
         self.start_byte_1 = unpacked_data[0]
         self.start_byte_2 = unpacked_data[1]

@@ -40,7 +40,12 @@ S3 Not in use in current setup
 rpm = 300000 / x
 
 ## S4 RPM 
-This channel is reversed (higher frequency/RPM -> higher hex value)
+This channel different from the other RPM channel
+Where TACH, R_WHL and S3 values are based on measuring time between magnets passing the sensor,
+values from this sensor is vhis sensor is based 
+
+
+ thersis reversed (higher frequency/RPM -> higher hex value)
 
 S4 is front of clutch  
 
@@ -50,6 +55,26 @@ S4 is front of clutch
 |4000  | 133 | 0xF9E  |   3998  |
 |8000  | 267 | 0x1F71 |   8049  |
 
+S4 new mesaurements
+
+| RPM  |  Hz   | HEX    | Decimal |
+|------|-------|--------|---------|
+| 500  | 200   |
+| 1000 | 100   |
+| 1500 |  66   |
+| 2000 |  50   |
+| 2500 |  40   |
+| 3000 |  33   |
+| 3500 |  28   |
+| 4000 |  25   |
+| 4500 |  22,3 |
+| 5000 |  20   |
+| 5500 |  18   |
+| 6000 |  16,6 |
+| 7000 |  14   |
+
+
+
 ## Battery voltage
 
 | Voltage | HEX  | Decimal |
@@ -57,6 +82,31 @@ S4 is front of clutch
 | 10      | 0xA5 | 165     |
 | 12      | 0xC6 | 198     |
 | 14      | 0xE7 | 231     |
+
+
+## Analog channels
+
+Analog channels are based on 8-bit ADC 
+
+Input i 0-5V and resulting values are between 0 and 255
+| Voltage | HEX  | Decimal |
+|---------|------|---------|
+| 0       | 0x?? | 0       |
+| 1       | 0x?? | ~ 50    |
+| 2       | 0x?? | ~ 100   |
+| 3       | 0x?? | ~ 154   |
+| 4       | 0x?? | ~ 205   |
+| 5       | 0x?? | ~ 255   |
+
+value =  input_voltage /  (5V / 255)  
+value = input_voltage * 255 / 5V
+
+
+| Celsius | HEX  | Decimal |
+|---------|------|---------|
+| ??      | 0x?? | ??     |
+| ??      | 0x?? | ??     |
+| ??      | 0x?? | ??     |
 
 ## Temperature
 

@@ -88,6 +88,7 @@ class DataPoint:
         """ Print live"""
         print(f'\rTACH: {self.tach_rpm} '
               f'R_WHL: {self.rwhl_rpm} '
+              f'S3: {self.s3_rpm} '
               f'S4: {self.s4_rpm} '
               f'AN1: {self.ana_ch1:.2f} '
               f'AN2: {self.ana_ch2:.2f} '

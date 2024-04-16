@@ -42,7 +42,7 @@ rpm = 300000 / x
 ## S4 RPM 
 This channel different from the other RPM channel
 Where TACH, R_WHL and S3 values are based on measuring time between magnets passing the sensor,
-values from this sensor is vhis sensor is based 
+values from this sensor is based on frequency
 
 
  thersis reversed (higher frequency/RPM -> higher hex value)
@@ -55,11 +55,11 @@ S4 is front of clutch
 |4000  | 133 | 0xF9E  |   3998  |
 |8000  | 267 | 0x1F71 |   8049  |
 
-S4 new mesaurements
+S4 new measurements
 
-| RPM  |  Hz   | HEX    | Decimal |
+| RPM  |  Hz   |  HEX   | Decimal |
 |------|-------|--------|---------|
-| 500  | 200   |
+| 500  | 200   | 
 | 1000 | 100   |
 | 1500 |  66   |
 | 2000 |  50   |

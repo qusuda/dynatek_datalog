@@ -42,6 +42,8 @@ def plot(data_points, event):
 
     tach_rpms = [data_point.tach_rpm for data_point in data_points]
     rwhl_rpms = [data_point.rwhl_rpm for data_point in data_points]
+    s3_rpms = [data_point.s3_rpm for data_point in data_points]
+
     s4_rpms = [data_point.s4_rpm for data_point in data_points]
 
     ana_ch1 = [data_point.ana_ch1 for data_point in data_points]
@@ -58,51 +60,64 @@ def plot(data_points, event):
 
 
     #Plot the measurements
-    fig, axis = plt.subplots(6, 1)
+    fig, axis = plt.subplots(5, 1)
     plt.suptitle(f"{event}", y=0.95)
 
-    axis[0].set_ylabel("Voltage", color= "purple")
-    axis[0].plot(sample_ids, battey_voltage, color='purple')
-    axis[0].get_xaxis().set_visible(False)
-    axis[0].set_ylim(10, 14)
+    plot_cnt = 0
 
-    axis[1].set_ylabel("RPM", color= "blue")
-    axis[1].plot(sample_ids, tach_rpms , color='blue', label='TACH')
-    axis[1].plot(sample_ids, rwhl_rpms , color='magenta', label='RWHL')
-    axis[1].plot(sample_ids, s4_rpms , color='grey', label='S4')
+    # axis[plot_cnt].set_ylabel("Voltage", color= "purple")
+    # axis[plot_cnt].plot(sample_ids, battey_voltage, color='purple')
+    # axis[plot_cnt].get_xaxis().set_visible(False)
+    # axis[plot_cnt].set_ylim(10, 14)
+
+    # plot_cnt = plot_cnt + 1
+
+    axis[plot_cnt].set_ylabel("RPM", color= "blue")
+    axis[plot_cnt].plot(sample_ids, tach_rpms , color='blue', label='TACH')
+    axis[plot_cnt].plot(sample_ids, rwhl_rpms , color='magenta', label='RWHL')
+    axis[plot_cnt].plot(sample_ids, s4_rpms , color='grey', label='S4')
+    axis[plot_cnt].plot(sample_ids, s3_rpms , color='red', label='S3')
     #axis[1].plot(sample_ids, s4_rpms , color='cyan', label='Clutch slip')
-    axis[1].get_xaxis().set_visible(False)
-    axis[1].set_ylim(0, 8000)
-    axis[1].legend(loc='upper center', bbox_to_anchor=(0.5, -0.0), ncol=4) # bbox_to_anchor=(0.5, -0.3)
+    axis[plot_cnt].get_xaxis().set_visible(False)
+    axis[plot_cnt].set_ylim(0, 8000)
+    axis[plot_cnt].legend(loc='upper center', bbox_to_anchor=(0.5, -0.0), ncol=4) # bbox_to_anchor=(0.5, -0.3)
 
-    axis[2].set_ylabel("Temperature [C]", color= "orange")
-    axis[2].plot(sample_ids, ana_ch5 , color='red', label='Front')
-    axis[2].plot(sample_ids, ana_ch6 , color='yellow', label='Back')
-    axis[2].get_xaxis().set_visible(False)
-    axis[2].set_ylim(0, 400)
+    plot_cnt = plot_cnt + 1
+
+    axis[plot_cnt].set_ylabel("Temperature [C]", color= "orange")
+    axis[plot_cnt].plot(sample_ids, ana_ch5 , color='red', label='Front')
+    axis[plot_cnt].plot(sample_ids, ana_ch6 , color='yellow', label='Back')
+    axis[plot_cnt].get_xaxis().set_visible(False)
+    #axis[plot_cnt].set_ylim(0, 400)
     # Add a legend
-    axis[2].legend(loc='upper center', bbox_to_anchor=(0.5, -0.0), ncol=2) # bbox_to_anchor=(0.5, -0.3)
+    axis[plot_cnt].legend(loc='upper center', bbox_to_anchor=(0.5, -0.0), ncol=2) # bbox_to_anchor=(0.5, -0.3)
 
-    axis[3].set_ylabel("Fuel pressure", color= "cyan")
-    axis[3].plot(sample_ids, ana_ch1 , color='cyan')
-    axis[3].plot(sample_ids, ana_ch4 , color='magenta')
-    axis[3].get_xaxis().set_visible(False)
-    axis[3].set_ylim(0, 400)
+    plot_cnt = plot_cnt + 1
 
-    axis[4].set_ylabel("G force", color= "green")
-    axis[4].plot(sample_ids, ana_ch2 , color='green')
-    axis[4].get_xaxis().set_visible(False)
-    axis[4].set_ylim(0, 400)
+    axis[plot_cnt].set_ylabel("Fuel pressure", color= "cyan")
+    axis[plot_cnt].plot(sample_ids, ana_ch1 , color='cyan')
+    axis[plot_cnt].plot(sample_ids, ana_ch4 , color='magenta')
+    axis[plot_cnt].get_xaxis().set_visible(False)
+    #axis[3].set_ylim(0, 400)
 
-    axis[5].set_ylabel("Switch", color= "blue")
-    axis[5].plot(sample_ids, switch1, label='SWITCH 1')
-    axis[5].plot(sample_ids, switch2, label='SWITCH 2')
-    axis[5].plot(sample_ids, switch3, label='SWITCH 3')
-    axis[5].plot(sample_ids, switch4, label='SWITCH 4')
-    axis[5].get_xaxis().set_visible(True)
-    axis[5].get_xaxis().set_label('Time')
-    axis[5].legend(loc='upper center', bbox_to_anchor=(0.5, -0.3), ncol=4)
-    axis[5].set_ylim(0, 1)   
+    plot_cnt = plot_cnt + 1
+
+    axis[plot_cnt].set_ylabel("G force", color= "green")
+    axis[plot_cnt].plot(sample_ids, ana_ch2 , color='green')
+    axis[plot_cnt].get_xaxis().set_visible(False)
+    #axis[4].set_ylim(0, 400)
+
+    plot_cnt = plot_cnt + 1
+
+    axis[plot_cnt].set_ylabel("Switch", color= "blue")
+    axis[plot_cnt].plot(sample_ids, switch1, label='SWITCH 1')
+    axis[plot_cnt].plot(sample_ids, switch2, label='SWITCH 2')
+    axis[plot_cnt].plot(sample_ids, switch3, label='SWITCH 3')
+    axis[plot_cnt].plot(sample_ids, switch4, label='SWITCH 4')
+    axis[plot_cnt].get_xaxis().set_visible(True)
+    axis[plot_cnt].get_xaxis().set_label('Time')
+    axis[plot_cnt].legend(loc='upper center', bbox_to_anchor=(0.5, -0.3), ncol=4)
+    axis[plot_cnt].set_ylim(0, 1)   
 
 
     plt.subplots_adjust(hspace=0.5)

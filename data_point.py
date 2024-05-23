@@ -94,6 +94,8 @@ class DataPoint:
               f'AN2: {self.ana_ch2:.2f} '
               f'AN3: {self.ana_ch3:.2f} '
               f'AN4: {self.ana_ch4:.2f} '
+              f'AN5: {self.ana_ch5:.2f} '
+              f'AN6: {self.ana_ch6:.2f} '
               f'SW1: {int(self.switch1)} '
               f'SW2: {int(self.switch2)} '
               f'SW3: {int(self.switch3)} '

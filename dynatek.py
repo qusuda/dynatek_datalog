@@ -98,7 +98,7 @@ class MainWindow(QMainWindow):
         #     QTimeEdit,
         # ]
 
-        self.current_file = "data/event_2024-04-07_14-12-52_switch_1_2_3_4.log"
+        self.current_file = "Mosten Spring Race_2024-04-26_16-49-27.log"
 
         self.line_edit_event = QLineEdit()
         event_layout = QHBoxLayout()

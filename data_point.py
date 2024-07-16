@@ -1,5 +1,9 @@
 import struct
 
+def fahrenheit_to_celsius(fahrenheit):
+    celsius = (fahrenheit - 32) * 5/9
+    return celsius
+
 class DataPoint:
     """Class representing datalogger data point"""
     def __init__(self, chunk_data):
@@ -32,25 +36,33 @@ class DataPoint:
         self.switch3 = bool(unpacked_data[4] & 16)
         self.switch4 = bool(unpacked_data[4] & 32)
         self.battery_voltage = unpacked_data[5] * 60.6 / 1000
-        self.ana_ch1 = unpacked_data[6] / 255 * 5.0
-        self.ana_ch2 = unpacked_data[7] / 255 * 5.0
-        self.ana_ch3 = unpacked_data[8] / 255 * 5.0
-        self.ana_ch4 = unpacked_data[9] / 255 * 5.0
+        self.ana_ch1 = float(unpacked_data[6]) / 255 * 5.0
+        self.ana_ch2 = float(unpacked_data[7]) / 255 * 5.0
+        self.ana_ch3 = float(unpacked_data[8]) / 255 * 5.0
+        self.ana_ch4 = float(unpacked_data[9]) / 255 * 5.0
         if unpacked_data[10] != 0:
             self.s3_rpm = int(3000000 / unpacked_data[10])
         else:
             self.s3_rpm = 0.0
         self.s4_rpm = unpacked_data[11]
-        self.ana_ch12 = unpacked_data[12] / 255 * 5.0
-        self.ana_ch11 = unpacked_data[13] / 255 * 5.0
-        self.ana_ch10 = unpacked_data[14] / 255 * 5.0
-        self.ana_ch9 = unpacked_data[15] / 255 * 5.0
-        self.ana_ch8 = unpacked_data[16] / 255 * 5.0
-        self.ana_ch7 = unpacked_data[17] / 255 * 5.0
-        self.ana_ch6 = unpacked_data[18] / 255 * 5.0
-        self.ana_ch5 = unpacked_data[19] / 255 * 5.0
+        self.ana_ch12 = float(unpacked_data[12]) / 255 * 5.0
+        self.ana_ch11 = float(unpacked_data[13]) / 255 * 5.0
+        self.ana_ch10 = float(unpacked_data[14]) / 255 * 5.0
+        self.ana_ch9 = float(unpacked_data[15]) / 255 * 5.0
+        self.ana_ch8 = float(unpacked_data[16]) / 255 * 5.0
+        self.ana_ch7 = float(unpacked_data[17]) / 255 * 5.0
+        self.ana_ch6 = float(unpacked_data[18]) / 255 * 5.0
+        self.ana_ch5 = float(unpacked_data[19]) / 255 * 5.0
         self.sample_id = unpacked_data[20]
         self.stop_byte_1 = unpacked_data[21]
+        
+        # Convert to real values
+        self.g_force = self.ana_ch2 + 1.0
+        self.temperature_front = fahrenheit_to_celsius(self.ana_ch5 * 400)
+        self.temperature_back = fahrenheit_to_celsius(self.ana_ch6 * 400)
+        self.fuel_pressure = (self.ana_ch1 * 60) - 30.0
+        #self.fuel_pressure = self.ana_ch1
+        self.throttle = self.ana_ch4 / 5.0 * 100
 
     def init_from_serial_data(self, chunk_data):
         """ Init data point from raw serial data chunk"""

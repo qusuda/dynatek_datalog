@@ -116,6 +116,28 @@ value = input_voltage * 255 / 5V
 | ??      | 0x?? | ??     |
 | ??      | 0x?? | ??     |
 
+## G-Force
+DA4G-1  -  ACCELEROMETER G-FORCE MEASSURE:
+
+0 - 4G range
+1G = GRAVITY.   1 VOLT + 1 VOLT PR. G-FORCE. 2 Volt = 1G
+
+## Temperature
+DEGT-1   -  ”EGT” EXHAUST GAS TEMPERATURE MONITOR OPTION:
+MEASSURE ON ANALOG 5-8 ON EXPANSION “1”
+1 THERMOCOUPLE AMP BOX + CABLES + 2x ”K” THERMOCOUPLES
+
+1 volt = 400
+2 volt = 800
+...
+
+## Fuel pressure
+Sensor DPS-270 (0-270 PSI) For fuel pressure:
+0 PSI = 0,5V
+30 PSI = 1V
+60 PSI = 1,5V
+90 PSI = 2V
+270 PSI = 5V
 
 # Bike setup:
 
@@ -175,4 +197,12 @@ Install python 3.xx
 python parse_legacy.py  RUNDATA/MOSTEN20.ABQ/RUNTUE1.ABQ
 
 
+# Bike gearing
+
+Front 17 tooths
+Rear 41 tooths
+
+Left side
+Front 66
+Rear 76
 

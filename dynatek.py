@@ -2,7 +2,6 @@ import sys
 
 import download as dynalog
 import plot as dynaplot
-#import pyplot as dynapyplot
 import plot_pyqtgraph as dynapyplot
 
 from PyQt6.QtCore import Qt, QObject, pyqtSignal, QThread, QSize
@@ -11,31 +10,23 @@ from PyQt6.QtCore import Qt, QObject, pyqtSignal, QThread, QSize
 
 # from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
-    QApplication,
-    QFileDialog,
-    QCheckBox,
-    QComboBox,
-    QDateEdit,
-    QDateTimeEdit,
-    QDial,
-    QDoubleSpinBox,
-    QFontComboBox,
-    QLabel,
-    QLCDNumber,
-    QLineEdit,
-    QMainWindow,
-    QProgressBar,
-    QPushButton,
-    QRadioButton,
-    QSlider,
-    QSpinBox,
-    QTimeEdit,
-    QVBoxLayout,
-    QHBoxLayout,
-    QWidget,
+    QApplication, QMainWindow, QFileDialog, QLabel, QLineEdit, QProgressBar, QPushButton, QVBoxLayout, QHBoxLayout, QWidget,
 )
 
+from PyQt6.QtGui import QPixmap
 
+# QLCDNumber,
+# QRadioButton,
+# QSlider,
+# QSpinBox,
+# QTimeEdit,
+# QCheckBox,
+# QComboBox,
+# QDateEdit,
+# QDateTimeEdit,
+# QDial,
+# QDoubleSpinBox,
+# QFontComboBox,
 
 class Worker(QObject):
     update_progress = pyqtSignal(str, int)
@@ -70,27 +61,9 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Dynatek Datalogger")
 
-        self.setFixedSize(QSize(400, 300))
+        self.setFixedSize(QSize(600, 350))
 
         layout = QVBoxLayout()
-        # widgets = [
-        #     QCheckBox,
-        #     QComboBox,
-        #     QDateEdit,
-        #     QDateTimeEdit,
-        #     QDial,
-        #     QDoubleSpinBox,
-        #     QFontComboBox,
-        #     QLCDNumber,
-        #     QLabel,
-        #     QLineEdit,
-        #     QProgressBar,
-        #     QPushButton,
-        #     QRadioButton,
-        #     QSlider,
-        #     QSpinBox,
-        #     QTimeEdit,
-        # ]
 
         self.current_file = "Mosten Spring Race_2024-04-26_16-49-27.log"
 
@@ -112,6 +85,18 @@ class MainWindow(QMainWindow):
 
         self.btn_download.clicked.connect(self.download_clicked)
 
+        # Create a label to display the image
+        self.image_label = QLabel(self)
+        
+        # Load the image using QPixmap
+        pixmap = QPixmap("resources/logo.png")  # Replace with your image path
+        self.image_label.setPixmap(pixmap)
+        
+        # Adjust the label size to the image size
+        self.image_label.setScaledContents(True)
+        self.image_label.setFixedSize(pixmap.size())
+
+        layout.addWidget(self.image_label)
         layout.addLayout(com_layout)
         layout.addLayout(event_layout)
         layout.addWidget(self.btn_download)

@@ -4,6 +4,8 @@
 import sys
 import matplotlib.pyplot as plt
 from data_point import DataPoint
+import matplotlib.gridspec as gridspec
+import mplcursors
 
 def parse_file(input_file, chunk_size, offset):
     """Function parsing data file"""
@@ -38,7 +40,7 @@ def plot(data_points, event):
     # Extracting data members for plotting
     sample_ids = [data_point.sample_id for data_point in data_points]
 
-    battey_voltage = [data_point.battery_voltage for data_point in data_points]
+    battery_voltage = [data_point.battery_voltage for data_point in data_points]
 
     tach_rpms = [data_point.tach_rpm for data_point in data_points]
     rwhl_rpms = [data_point.rwhl_rpm for data_point in data_points]
@@ -46,24 +48,38 @@ def plot(data_points, event):
 
     s4_rpms = [data_point.s4_rpm for data_point in data_points]
 
-    ana_ch1 = [data_point.ana_ch1 for data_point in data_points]
-    ana_ch2 = [data_point.ana_ch2 for data_point in data_points]
-    ana_ch4 = [data_point.ana_ch4 for data_point in data_points]
+    fuel_pressure = [data_point.fuel_pressure for data_point in data_points]
+    g_force = [data_point.g_force for data_point in data_points]
+    throttle = [data_point.throttle for data_point in data_points]
     
-    ana_ch5 = [data_point.ana_ch5 for data_point in data_points]
-    ana_ch6 = [data_point.ana_ch6 for data_point in data_points]
+    temp_front = [data_point.temperature_front for data_point in data_points]
+    temp_back = [data_point.temperature_back for data_point in data_points]
 
     switch1 = [data_point.switch1 for data_point in data_points]
-    switch2 = [data_point.switch2 for data_point in data_points]
-    switch3 = [data_point.switch3 for data_point in data_points]
-    switch4 = [data_point.switch4 for data_point in data_points]
-
 
     #Plot the measurements
-    fig, axis = plt.subplots(5, 1)
-    plt.suptitle(f"{event}", y=0.95)
+    fig = plt.figure()  # Total figure size
+    #fig, axis = plt.subplots(5, 1)
+
+    axis = []
+    # Create a GridSpec with 3 rows and 1 column
+    gs = gridspec.GridSpec(5, 1, height_ratios=[8, 4, 4, 4, 1])  # Adjust height_ratios as needed
+    axis.append(fig.add_subplot(gs[0]))
+    axis.append(fig.add_subplot(gs[1]))
+    axis.append(fig.add_subplot(gs[2]))
+    axis.append(fig.add_subplot(gs[3]))
+    axis.append(fig.add_subplot(gs[4]))
+    #ax2 = fig.add_subplot(gs[1])
+    #ax3 = fig.add_subplot(gs[2])
+    #ax4 = fig.add_subplot(gs[3])
+    #ax5 = fig.add_subplot(gs[4])
+
+    plt.suptitle(f"{event}", y=0.97)
 
     plot_cnt = 0
+
+    # Set the background color for the figure
+    fig.patch.set_facecolor('slategray')
 
     # axis[plot_cnt].set_ylabel("Voltage", color= "purple")
     # axis[plot_cnt].plot(sample_ids, battey_voltage, color='purple')
@@ -71,57 +87,71 @@ def plot(data_points, event):
     # axis[plot_cnt].set_ylim(10, 14)
 
     # plot_cnt = plot_cnt + 1
-
     axis[plot_cnt].set_ylabel("RPM", color= "blue")
     axis[plot_cnt].plot(sample_ids, tach_rpms , color='blue', label='TACH')
     axis[plot_cnt].plot(sample_ids, rwhl_rpms , color='magenta', label='RWHL')
-    axis[plot_cnt].plot(sample_ids, s4_rpms , color='grey', label='S4')
+    #axis[plot_cnt].plot(sample_ids, s4_rpms , color='grey', label='S4')
     axis[plot_cnt].plot(sample_ids, s3_rpms , color='red', label='S3')
     #axis[1].plot(sample_ids, s4_rpms , color='cyan', label='Clutch slip')
     axis[plot_cnt].get_xaxis().set_visible(False)
     axis[plot_cnt].set_ylim(0, 8000)
-    axis[plot_cnt].legend(loc='upper center', bbox_to_anchor=(0.5, -0.0), ncol=4) # bbox_to_anchor=(0.5, -0.3)
+    axis[plot_cnt].legend(loc='upper left', ncol=2)
+    #axis[plot_cnt].legend(loc='upper center', bbox_to_anchor=(0.5, -0.0), ncol=4) # bbox_to_anchor=(0.5, -0.3)
 
     plot_cnt = plot_cnt + 1
 
-    axis[plot_cnt].set_ylabel("Temperature [C]", color= "orange")
-    axis[plot_cnt].plot(sample_ids, ana_ch5 , color='red', label='Front')
-    axis[plot_cnt].plot(sample_ids, ana_ch6 , color='yellow', label='Back')
+    axis[plot_cnt].set_ylabel("Exhaust Temp [C]", color= "orange")
+    axis[plot_cnt].plot(sample_ids, temp_front , color='red', label='Front')
+    axis[plot_cnt].plot(sample_ids, temp_back , color='yellow', label='Back')
     axis[plot_cnt].get_xaxis().set_visible(False)
-    #axis[plot_cnt].set_ylim(0, 400)
+    axis[plot_cnt].set_ylim(0, 400)
     # Add a legend
-    axis[plot_cnt].legend(loc='upper center', bbox_to_anchor=(0.5, -0.0), ncol=2) # bbox_to_anchor=(0.5, -0.3)
-
+    #axis[plot_cnt].legend(loc='upper center', bbox_to_anchor=(0.5, -0.0), ncol=2) # bbox_to_anchor=(0.5, -0.3)
+    axis[plot_cnt].legend(loc='upper left', ncol=2)
     plot_cnt = plot_cnt + 1
 
-    axis[plot_cnt].set_ylabel("Fuel pressure", color= "cyan")
-    axis[plot_cnt].plot(sample_ids, ana_ch1 , color='cyan')
-    axis[plot_cnt].plot(sample_ids, ana_ch4 , color='magenta')
+    axis[plot_cnt].set_ylabel("Fuel press.(PSI)", color= "cyan")
+    axis[plot_cnt].plot(sample_ids, fuel_pressure , color='cyan', label="Pressure  (PSI)")
+    axis[plot_cnt].plot(sample_ids, throttle , color='magenta', label="Throttle")
     axis[plot_cnt].get_xaxis().set_visible(False)
-    #axis[3].set_ylim(0, 400)
+    # Add a legend
+    axis[plot_cnt].legend(loc='upper left', ncol=2)
+    #axis[plot_cnt].legend(loc='upper center', bbox_to_anchor=(0.5, -0.0), ncol=2) # bbox_to_anchor=(0.5, -0.3)
+    #axis[plot_cnt].set_ylim(0, 100)
 
     plot_cnt = plot_cnt + 1
 
     axis[plot_cnt].set_ylabel("G force", color= "green")
-    axis[plot_cnt].plot(sample_ids, ana_ch2 , color='green')
+    axis[plot_cnt].plot(sample_ids, g_force , color='green')
     axis[plot_cnt].get_xaxis().set_visible(False)
-    #axis[4].set_ylim(0, 400)
+    axis[plot_cnt].set_ylim(0, 5)
 
     plot_cnt = plot_cnt + 1
 
-    axis[plot_cnt].set_ylabel("Switch", color= "blue")
-    axis[plot_cnt].plot(sample_ids, switch1, label='SWITCH 1')
-    axis[plot_cnt].plot(sample_ids, switch2, label='SWITCH 2')
-    axis[plot_cnt].plot(sample_ids, switch3, label='SWITCH 3')
-    axis[plot_cnt].plot(sample_ids, switch4, label='SWITCH 4')
+    axis[plot_cnt].set_ylabel("Gear shift", color= "blue")
+    axis[plot_cnt].plot(sample_ids, switch1, label='Gear shift')
     axis[plot_cnt].get_xaxis().set_visible(True)
     axis[plot_cnt].get_xaxis().set_label('Time')
-    axis[plot_cnt].legend(loc='upper center', bbox_to_anchor=(0.5, -0.3), ncol=4)
-    axis[plot_cnt].set_ylim(0, 1)   
+    #axis[plot_cnt].legend(loc='upper center', bbox_to_anchor=(0.5, -0.3), ncol=4)
+    axis[plot_cnt].set_ylim(0, 1.2)
+    #axis[plot_cnt].set_height(10)
+
+    for ax in axis:
+        ax.set_facecolor('gray')
 
 
-    plt.subplots_adjust(hspace=0.5)
-    #plt.tight_layout(pad=0.5)
+    plt.subplots_adjust(top=0.939, bottom=0.045, left=0.055, right=0.99, hspace=0.223, wspace=0.2)
+
+    # Make the plot full screen
+    manager = plt.get_current_fig_manager()
+    manager.full_screen_toggle()
+
+    # Add cursors to the plot
+    #mplcursors.cursor(hover=True)
+    mplcursors.cursor(hover=True, multiple=True)
+
+
+    #plt.tight_layout()
     #plt.grid(True)
     plt.show()
 

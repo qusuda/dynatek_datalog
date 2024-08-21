@@ -71,6 +71,8 @@ class PlotApp(QMainWindow):
         # Enabled X mouse handling on RPM plot
         self.rpm_plot_widget.setMouseEnabled(x=True,y=False)
 
+        self.rpm_plot_widget.plotItem.addLegend()
+
         # Add cursor
         self.vLine = pg.InfiniteLine(angle=90, movable=False)
         self.rpm_plot_widget.addItem(self.vLine, ignoreBounds=True)
@@ -92,6 +94,7 @@ class PlotApp(QMainWindow):
         self.temp_vLine = pg.InfiniteLine(angle=90, movable=False)
         self.temp_plot_widget.addItem(self.temp_vLine, ignoreBounds=True)
         self.temp_plot_widget.scene().sigMouseMoved.connect(self.mouseMoved)
+        self.temp_plot_widget.plotItem.addLegend()
 
         # Create a Throttle PlotWidget instance
         self.throttle_plot_widget = pg.PlotWidget()
@@ -159,6 +162,7 @@ class PlotApp(QMainWindow):
         #self.temp_plot_widget.plotItem.setLabel('bottom', 'Time', units='s')
 
         self.throttle_plot_widget.plotItem.setLabel('left', 'Throttle', units='%')
+        self.throttle_plot_widget.plotItem.addLegend()
         #self.throttle_plot_widget.plotItem.setLabel('bottom', 'Time', units='s')
 
         self.g_force_plot_widget.plotItem.setLabel('left', 'G-Force', units='g')
@@ -269,20 +273,19 @@ class PlotApp(QMainWindow):
         switch1 = [data_point.switch1 for data_point in data_points]
 
         # Plot data on respective plot widgets
-        self.rpm_plot_widget.plot(sample_ids, tach_rpms, pen='b')
-        self.rpm_plot_widget.plot(sample_ids, s3_rpms, pen='g')
+        self.rpm_plot_widget.plot(sample_ids, tach_rpms, pen='b', name='Tach')
+        self.rpm_plot_widget.plot(sample_ids, s3_rpms, pen='g', name='R_whl')
         self.rpm_plot_widget.plotItem.getAxis('left').setWidth(int(self.axis_width))
         self.rpm_plot_widget.plotItem.getAxis('right').setWidth(int(40))
         
-        self.temp_plot_widget.plot(sample_ids, temp_front, pen='r')
-        self.temp_plot_widget.plot(sample_ids, temp_back, pen='y')
+        self.temp_plot_widget.plot(sample_ids, temp_front, pen='r', name='Front')
+        self.temp_plot_widget.plot(sample_ids, temp_back, pen='y', name='Back')
         self.temp_plot_widget.plotItem.getAxis('left').setWidth(int(self.axis_width))
         self.temp_plot_widget.plotItem.showAxis('right')
         self.temp_plot_widget.plotItem.getAxis('right').setWidth(int(40))
         
-
-        self.throttle_plot_widget.plot(sample_ids, throttle, pen='pink')
-        self.throttle_plot_widget.plot(sample_ids, fuel_pressure, pen='cyan')
+        self.throttle_plot_widget.plot(sample_ids, throttle, pen='pink', name = 'Throttle')
+        self.throttle_plot_widget.plot(sample_ids, fuel_pressure, pen='cyan', name = 'Pressure')
         self.throttle_plot_widget.plotItem.getAxis('left').setWidth(int(self.axis_width))
         self.throttle_plot_widget.plotItem.showAxis('right')
         self.throttle_plot_widget.plotItem.getAxis('right').setWidth(int(40))

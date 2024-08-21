@@ -12,6 +12,10 @@ BAUD_RATE = 9600
 
 #sim_file = "data/event_2024-04-07_14-12-52_switch_1_2_3_4.log"
 #sim_file = "test/input_simulation.log"
+sim_file = ""
+
+expected_data_cnt = 62235 
+#expected_data_cnt = 62233 
 
 def download(port, event, progress_cb):
     """Function downloading data"""
@@ -41,12 +45,12 @@ def download(port, event, progress_cb):
                             file.flush()  # Ensure data is written immediately
                         data_count += 1
                         if progress_cb is not None:
-                            progress_cb("Downloading", 100 * data_count // 62235)
+                            progress_cb("Downloading", 100 * data_count // expected_data_cnt)
                     else:
                         break
-                    if data_count == 62235:
+                    if data_count == expected_data_cnt: ## TODO +2
                         if progress_cb is not None:
-                            progress_cb("Done", 100 * data_count // 62235)
+                            progress_cb("Done", 100 * data_count // expected_data_cnt)
                         # TODO listen for FFFF sample id
                         return output_file
                     time.sleep(0.0001)
@@ -73,12 +77,12 @@ def download(port, event, progress_cb):
                             file.flush()  # Ensure data is written immediately
                         data_count += 1
                         if progress_cb is not None:
-                            progress_cb("Downloading", 100 * data_count // 62235)
+                            progress_cb("Downloading", 100 * data_count // expected_data_cnt)
                     # else:
                     #     break
-                    if data_count == 62235:
+                    if data_count == expected_data_cnt:
                         if progress_cb is not None:
-                            progress_cb("Done", 100 * data_count // 62235)
+                            progress_cb("Done", 100 * data_count // expected_data_cnt)
                         # TODO listen for FFFF sample id
                         return output_file
         except serial.SerialException as e:

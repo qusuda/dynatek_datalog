@@ -190,9 +190,11 @@ CHUNK_SIZE = 38 bytes
 
 Install python 3.xx
 
-    pip install matplotlib
+    pip install matplotlib // Deprecated
     pip install pyserial
     pip install pyqt6
+    pip install pyqtgraph
+
 
 python parse_legacy.py  RUNDATA/MOSTEN20.ABQ/RUNTUE1.ABQ
 

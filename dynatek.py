@@ -1,7 +1,7 @@
 import sys
 
 import download as dynalog
-import plot as dynaplot
+import parse as dynaplot
 import plot_pyqtgraph as dynapyplot
 
 from PyQt6.QtCore import Qt, QObject, pyqtSignal, QThread, QSize

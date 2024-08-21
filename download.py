@@ -11,7 +11,7 @@ BAUD_RATE = 9600
 
 
 #sim_file = "data/event_2024-04-07_14-12-52_switch_1_2_3_4.log"
-sim_file = ""
+#sim_file = "test/input_simulation.log"
 
 def download(port, event, progress_cb):
     """Function downloading data"""

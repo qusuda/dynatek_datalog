@@ -57,9 +57,11 @@ class DataPoint:
         self.stop_byte_1 = unpacked_data[21]
         
         # Convert to real values
-        self.g_force = self.ana_ch2 + 1.0
-        self.temperature_front = fahrenheit_to_celsius(self.ana_ch5 * 400)
-        self.temperature_back = fahrenheit_to_celsius(self.ana_ch6 * 400)
+        self.g_force = self.ana_ch2 + 1.0 - 0.49
+        #self.temperature_front = fahrenheit_to_celsius(self.ana_ch5 * 400)
+        #self.temperature_back = fahrenheit_to_celsius(self.ana_ch6 * 400)
+        self.temperature_front = self.ana_ch5 * 210 + 21
+        self.temperature_back = self.ana_ch6 * 210 + 21
         self.fuel_pressure = (self.ana_ch1 * 60) - 30.0
         #self.fuel_pressure = self.ana_ch1
         self.throttle = self.ana_ch4 / 5.0 * 100

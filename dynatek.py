@@ -3,6 +3,7 @@ import sys
 import download as dynalog
 import parse as dynaplot
 import plot_pyqtgraph as dynapyplot
+import json
 
 from PyQt6.QtCore import Qt, QObject, pyqtSignal, QThread, QSize
 
@@ -27,6 +28,19 @@ from PyQt6.QtGui import QPixmap
 # QDial,
 # QDoubleSpinBox,
 # QFontComboBox,
+
+
+# Function to load the configuration from a JSON file
+def load_config(config_file):
+    with open(config_file, 'r') as file:
+        config = json.load(file)
+    return config
+
+# Function to save the configuration to a JSON file
+def save_config(config_file, config):
+    with open(config_file, 'w') as file:
+        json.dump(config, file, indent=4)
+
 
 class Worker(QObject):
     update_progress = pyqtSignal(str, int)
@@ -56,8 +70,11 @@ class Worker(QObject):
 
 # Subclass QMainWindow to customize your application's main window
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, config_file):
         super().__init__()
+
+        self.config_file = config_file
+        self.config = load_config(config_file)
 
         self.setWindowTitle("Dynatek Datalogger")
 
@@ -71,13 +88,16 @@ class MainWindow(QMainWindow):
         event_layout = QHBoxLayout()
         event_layout.addWidget(QLabel("Event"))
         event_layout.addWidget(self.line_edit_event)
-        self.line_edit_event.setText("Mosten Raceday")
+        self.line_edit_event.setText(self.config.get("event", "Mosten Raceday")) 
+        self.line_edit_event.textChanged.connect(self.save_config)
+        
 
         self.line_edit_com_port = QLineEdit()
         com_layout = QHBoxLayout()
         com_layout.addWidget(QLabel("COM port"))
         com_layout.addWidget(self.line_edit_com_port)
-        self.line_edit_com_port.setText("COM4")
+        self.line_edit_com_port.setText(self.config.get("comPort", "COM3"))
+        self.line_edit_com_port.textChanged.connect(self.save_config)
 
         self.btn_download = QPushButton()
         self.btn_download.setEnabled(True)
@@ -193,10 +213,19 @@ class MainWindow(QMainWindow):
         self.new_window.plot(data_points, self.current_file)
         self.new_window.updateViews()
 
+    def save_config(self):
+        # Update the configuration with new values
+        self.config["event"] = self.line_edit_event.text()
+        self.config["comPort"] = self.line_edit_com_port.text()
+        # Save the updated configuration to the file
+        save_config(self.config_file, self.config)
+
 
 
 app = QApplication(sys.argv)
-window = MainWindow()
+# Load configuration
+config_file = "config.json"
+window = MainWindow(config_file)
 window.show()
 
 app.exec()

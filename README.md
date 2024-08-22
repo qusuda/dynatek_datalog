@@ -186,6 +186,15 @@ CHUNK_SIZE = 38 bytes
 
 <SAMPLE_ID_16_BIT><R_WHEEL_RPM_16_BIT><TACH_RPM_16_BIT><DIGITAL_16BIT><UNKNOWN_16bit><UNKNOWN_16bit><CLUTCH_SLIP_16bit><FUEL_PRESSURE_16bit><G_FORCE_16BIT><UNKNOWN_16bit><UNKNOWN_16bit><TEMP1_16BIT><TEMP2_16BIT><UNKNOWN_16bit><UNKNOWN_16bit><UNKNOWN_16bit><UNKNOWN_16bit><UNKNOWN_16bit><UNKNOWN_16bit>
 
+# Bike gearing
+
+Front 17 tooths
+Rear 41 tooths
+
+Left side
+Front 66
+Rear 76
+
 # How to use
 
 Install python 3.xx
@@ -195,16 +204,21 @@ Install python 3.xx
     pip install pyqt6
     pip install pyqtgraph
 
+Run
 
-python parse_legacy.py  RUNDATA/MOSTEN20.ABQ/RUNTUE1.ABQ
+    python parse_legacy.py  RUNDATA/MOSTEN20.ABQ/RUNTUE1.ABQ
+    python dynatek.py
+    
+    or
+
+    run.bat
+
+Build (Exe)
+
+    pip install pyinstaller
+    pyinstaller --onefile --windowed .\dynatek.py
 
 
-# Bike gearing
 
-Front 17 tooths
-Rear 41 tooths
 
-Left side
-Front 66
-Rear 76
 

@@ -7,6 +7,7 @@ import plot_pyqtgraph as dynapyplot
 import json
 
 from PyQt6.QtCore import Qt, QObject, pyqtSignal, QThread, QSize
+from PyQt6.QtGui import QIcon # QColor
 
 #from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton
 
@@ -78,6 +79,9 @@ class MainWindow(QMainWindow):
         self.config = load_config(config_file)
 
         self.setWindowTitle("Dynatek Datalogger")
+
+        # Set the window icon
+        self.setWindowIcon(QIcon('resources/appicon.ico'))
 
         self.setFixedSize(QSize(600, 350))
 
@@ -244,6 +248,7 @@ class MainWindow(QMainWindow):
 
 
 app = QApplication(sys.argv)
+app.setWindowIcon(QIcon('resources/appicon.ico'))
 # Load configuration
 config_file = "config.json"
 window = MainWindow(config_file)

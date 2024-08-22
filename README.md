@@ -131,6 +131,14 @@ MEASSURE ON ANALOG 5-8 ON EXPANSION “1”
 2 volt = 800
 ...
 
+Meaurements
+
+ADC = 0.29 -> 90 C
+
+ADC = 0.27 -> 85 C
+
+ADC = 0.05 -> 35 C
+
 ## Fuel pressure
 Sensor DPS-270 (0-270 PSI) For fuel pressure:
 0 PSI = 0,5V
@@ -138,6 +146,10 @@ Sensor DPS-270 (0-270 PSI) For fuel pressure:
 60 PSI = 1,5V
 90 PSI = 2V
 270 PSI = 5V
+
+Formula:
+
+    Pressure = ADC_val * 60 - 30
 
 # Bike setup:
 
@@ -216,7 +228,12 @@ Run
 Build (Exe)
 
     pip install pyinstaller
+
     pyinstaller --onefile --windowed .\dynatek.py
+    
+    or
+    
+    pyinstaller --onefile --windowed --icon=app.ico .\dynatek.py
 
 
 

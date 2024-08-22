@@ -1,7 +1,7 @@
 import sys
 
 import download as dynalog
-import parse as dynaplot
+import parse as dynaparse
 import live as dynalive
 import plot_pyqtgraph as dynapyplot
 import json
@@ -226,7 +226,7 @@ class MainWindow(QMainWindow):
         #print(self.current_file)   
         #if self.current_file > 0:
         self.current_file = self.line_edit_file.text() 
-        data_points = dynaplot.parse_file(self.current_file, 27, 0)
+        data_points = dynaparse.parse_file(self.current_file, 27, 0)
         # Create a new window (QMainWindow or QWidget)
         self.new_window = dynapyplot.PlotApp()  # You can also use QWidget()        
         # Show the new window

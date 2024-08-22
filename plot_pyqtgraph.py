@@ -2,7 +2,7 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QCheckBox, QLabel
 import pyqtgraph as pg
 
-import plot as dynaplot
+import parse as dynaplot
 
 class PlotApp(QMainWindow):
     # Set global axix width to align plot i stack

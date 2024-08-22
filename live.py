@@ -4,6 +4,8 @@ import sys
 import serial
 import time
 
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QCheckBox, QLabel
+
 from data_point import DataPoint
 
 # COM port settings
@@ -72,6 +74,30 @@ def live(port):
             if ser and ser.is_open:
                 ser.close()
                 print(f"Serial port {port} closed.")
+
+class LiveApp(QMainWindow):
+    def __init__(self, com_port):
+        super().__init__()
+
+        self.com_port = com_port
+
+        # Set the window title
+        self.setWindowTitle('Dynatek Datalogger - Plot')
+
+        # Create a QWidget for the central widget
+        self.central_widget = QWidget()
+        self.setCentralWidget(self.central_widget)
+
+        # Create a QVBoxLayout instance
+        self.layout = QVBoxLayout(self.central_widget)
+
+        # Event label
+        self.event_label = QLabel('Event')
+        self.layout.addWidget(self.event_label)
+
+    def start(self):
+        live(self.com_port)
+        # TODO dethread and visualize Live data
 
 if __name__ == "__main__":
     COM_PORT = DEFAULT_COM_PORT

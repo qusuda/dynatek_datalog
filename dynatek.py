@@ -2,6 +2,7 @@ import sys
 
 import download as dynalog
 import parse as dynaplot
+import live as dynalive
 import plot_pyqtgraph as dynapyplot
 import json
 
@@ -99,6 +100,13 @@ class MainWindow(QMainWindow):
         self.line_edit_com_port.setText(self.config.get("comPort", "COM3"))
         self.line_edit_com_port.textChanged.connect(self.save_config)
 
+        # Live session
+        self.btn_live_session = QPushButton()
+        self.btn_live_session.setEnabled(True)
+        self.btn_live_session.setText("Live session")
+        self.btn_live_session.clicked.connect(self.live_session_clicked)
+
+        # Download
         self.btn_download = QPushButton()
         self.btn_download.setEnabled(True)
         self.btn_download.setText("Download")
@@ -116,8 +124,10 @@ class MainWindow(QMainWindow):
         self.image_label.setScaledContents(True)
         self.image_label.setFixedSize(pixmap.size())
 
+        # Layout window
         layout.addWidget(self.image_label)
         layout.addLayout(com_layout)
+        layout.addWidget(self.btn_live_session)
         layout.addLayout(event_layout)
         layout.addWidget(self.btn_download)
 
@@ -169,6 +179,17 @@ class MainWindow(QMainWindow):
             self.btn_plot.setEnabled(state == "Done")
             self.worker.stop_signal.emit()
 
+    def live_session_clicked(self):
+        print("Start live")
+        #dynalive.live(self.line_edit_com_port.text())
+        # Create a new window (QMainWindow or QWidget)
+        self.live_window = dynalive.LiveApp(self.line_edit_com_port.text())  # You can also use QWidget()        
+        # Show the new window
+        self.live_window.show()
+        #self.live_window.plot(data_points, self.current_file)
+        #self.live_window.updateViews()
+        self.live_window.start()
+
     def download_clicked(self):
         self.btn_download.setEnabled(False)
         # Create a new worker and thread each time a download is initiated
@@ -202,7 +223,7 @@ class MainWindow(QMainWindow):
     def plot_clicked(self):
         """v"""
         print(f"Plotting : {self.current_file}")
-        #print(self.current_file)
+        #print(self.current_file)   
         #if self.current_file > 0:
         self.current_file = self.line_edit_file.text() 
         data_points = dynaplot.parse_file(self.current_file, 27, 0)

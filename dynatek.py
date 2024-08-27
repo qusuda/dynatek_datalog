@@ -16,7 +16,7 @@ from PyQt6.QtGui import QIcon # QColor
 
 # from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QFileDialog, QLabel, QLineEdit, QProgressBar, QPushButton, QVBoxLayout, QHBoxLayout, QWidget,
+    QApplication, QMainWindow, QFileDialog, QLabel, QLineEdit, QProgressBar, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QMessageBox
 )
 
 from PyQt6.QtGui import QPixmap
@@ -86,7 +86,7 @@ class MainWindow(QMainWindow):
         # Set the window icon
         self.setWindowIcon(QIcon('resources/appicon.ico'))
 
-        self.setFixedSize(QSize(600, 350))
+        self.setFixedSize(QSize(700, 350))
 
         layout = QVBoxLayout()
 
@@ -179,12 +179,15 @@ class MainWindow(QMainWindow):
         self.worker.update_progress.connect(self.update_progress)
 
     def update_progress(self, state, percentage):
+        self.alert.close()
         self.progress_download.setValue(percentage)
         self.lbl_download_state.setText(state)
         if state == "Done" or "Error" in state:
             self.btn_download.setEnabled(True)
             self.btn_plot.setEnabled(state == "Done")
             self.worker.stop_signal.emit()
+            if(state == "Error"):
+                self.show_alert("Unable to open com port")
 
     def live_session_clicked(self):
         print("Start live")
@@ -215,11 +218,24 @@ class MainWindow(QMainWindow):
 
         # Start the thread
         self.worker_thread.start()
+        self.show_alert("Press button on datalogger to begin download")
 
     def cleanup_after_download(self):
         # Re-enable the button after the work is done
         #self.btn_download.setEnabled(True)
         self.worker_thread = None  # Reset the thread reference
+
+    def show_alert(self, text):
+        self.alert = QMessageBox(self)
+        self.alert.setWindowTitle("Alert")
+        self.alert.setText(text)
+        self.alert.setIcon(QMessageBox.Icon.Warning)
+        self.alert.setStandardButtons(QMessageBox.StandardButton.Ok)
+
+        # Set the alert to be modal (default behavior for QMessageBox)
+        self.alert.setModal(True)
+
+        self.alert.exec()  # exec() starts the modal loop
 
     def open_file_dialog(self):
         # Open a file dialog to select a file
@@ -238,7 +254,7 @@ class MainWindow(QMainWindow):
         self.new_window = dynapyplot.PlotApp()  # You can also use QWidget()        
         # Show the new window
         self.new_window.show()
-        self.new_window.plot(data_points, self.current_file)
+        self.new_window.plot(data_points, os.path.basename(self.current_file))
         self.new_window.updateViews()
 
     def save_config(self):

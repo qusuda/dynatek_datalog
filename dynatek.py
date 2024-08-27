@@ -1,4 +1,7 @@
 import sys
+import os
+
+from PyQt6 import QtGui
 
 import download as dynalog
 import parse as dynaparse

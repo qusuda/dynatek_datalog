@@ -43,7 +43,7 @@ class DataPoint:
         if unpacked_data[10] != 0:
             self.s3_rpm = int(3000000 / unpacked_data[10])
         else:
-            self.s3_rpm = 0.0
+            self.s3_rpm = 0
         self.s4_rpm = unpacked_data[11]
         self.ana_ch12 = float(unpacked_data[12]) / 255 * 5.0
         self.ana_ch11 = float(unpacked_data[13]) / 255 * 5.0

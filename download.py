@@ -4,6 +4,7 @@ import sys
 import datetime
 import serial
 import time
+import os
 
 # COM port settings
 DEFAULT_COM_PORT = 'COM4'  # Change this to your COM port
@@ -15,7 +16,9 @@ BAUD_RATE = 9600
 sim_file = ""
 
 expected_data_cnt = 62235 
-#expected_data_cnt = 62233 
+
+if len(sim_file):
+    expected_data_cnt = 62233
 
 def download(port, event, progress_cb):
     """Function downloading data"""
@@ -24,7 +27,14 @@ def download(port, event, progress_cb):
 
     # Generate file name with timestamp
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    output_file = f'{event}_{timestamp}.log'
+    output_file = f'data/{event}/{event}_{timestamp}.log'
+
+    directory = f'data/{event}'
+
+    # Create the directory if it doesn't exist
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+        print(f"Directory '{directory}' created.")
 
     data_count = 0 
 
@@ -87,6 +97,7 @@ def download(port, event, progress_cb):
                         return output_file
         except serial.SerialException as e:
             print(f"Error: {e}")
+            progress_cb("Error", 0)
         finally:
             if ser and ser.is_open:
                 ser.close()

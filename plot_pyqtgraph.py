@@ -141,19 +141,19 @@ class PlotApp(QMainWindow):
         # Set axis labels with units
         self.rpm_plot_widget.plotItem.setLabel('left', 'RPM')
         # Create the secondary y-axis view box
-        self.p2 = pg.ViewBox()
+        self.clutch_slip_view = pg.ViewBox()
         self.rpm_plot_widget.plotItem.showAxis('right')
         self.rpm_plot_widget.plotItem.setLabel('right', 'Clutch slip')
-        self.rpm_plot_widget.plotItem.scene().addItem(self.p2)
-        self.rpm_plot_widget.plotItem.getAxis('right').linkToView(self.p2)
-        self.p2.setXLink(self.rpm_plot_widget.plotItem)
+        self.rpm_plot_widget.plotItem.scene().addItem(self.clutch_slip_view)
+        self.rpm_plot_widget.plotItem.getAxis('right').linkToView(self.clutch_slip_view)
+        self.clutch_slip_view.setXLink(self.rpm_plot_widget.plotItem)
 
         # Attach the update function to both views
         self.rpm_plot_widget.plotItem.vb.sigResized.connect(self.updateViews)
         
         # Plot data on the secondary y-axis (( CLUTCH SLIP))
-        secondary_curve = pg.PlotDataItem([0, 1, 2, 3, 4, 5, 20], [100, 80, 77, 70, 20, 10, 0], pen='orange')
-        self.p2.addItem(secondary_curve)
+        clutch_slip_curve = pg.PlotDataItem([0, 1, 2, 3, 4, 5, 20], [100, 80, 77, 70, 20, 10, 0], pen='orange', name='Clutch slip')
+        self.clutch_slip_view.addItem(clutch_slip_curve)
 
         #self.rpm_plot_widget.plotItem.setLabel('bottom', 'Time', units='s')
 
@@ -220,8 +220,9 @@ class PlotApp(QMainWindow):
 
     # Define update function to sync views
     def updateViews(self):
-        self.p2.setGeometry(self.rpm_plot_widget.plotItem.vb.sceneBoundingRect())
-        self.p2.linkedViewChanged(self.rpm_plot_widget.plotItem.vb, self.p2.XAxis)
+        self.clutch_slip_view.setGeometry(self.rpm_plot_widget.plotItem.vb.sceneBoundingRect())
+        self.clutch_slip_view.linkedViewChanged(self.rpm_plot_widget.plotItem.vb, self.clutch_slip_view.XAxis)
+
 
     # Link cursors
     def mouseMoved(self, event):

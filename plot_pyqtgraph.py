@@ -150,13 +150,7 @@ class PlotApp(QMainWindow):
 
         # Attach the update function to both views
         self.rpm_plot_widget.plotItem.vb.sigResized.connect(self.updateViews)
-        
-        # Plot data on the secondary y-axis (( CLUTCH SLIP))
-        clutch_slip_curve = pg.PlotDataItem([0, 1, 2, 3, 4, 5, 20], [100, 80, 77, 70, 20, 10, 0], pen='orange', name='Clutch slip')
-        self.clutch_slip_view.addItem(clutch_slip_curve)
-
         #self.rpm_plot_widget.plotItem.setLabel('bottom', 'Time', units='s')
-
 
         self.temp_plot_widget.plotItem.setLabel('left', 'Temperature', units='°C')
         #self.temp_plot_widget.plotItem.setLabel('bottom', 'Time', units='s')
@@ -259,7 +253,7 @@ class PlotApp(QMainWindow):
 
         tach_rpms = [data_point.tach_rpm for data_point in data_points]
         rwhl_rpms = [data_point.rwhl_rpm for data_point in data_points]
-        #clutch_slip = [data_point.clutch_slip for data_point in data_points]
+        clutch_slip = [data_point.clutch_slip for data_point in data_points]
         s3_rpms = [data_point.s3_rpm for data_point in data_points]
 
         s4_rpms = [data_point.s4_rpm for data_point in data_points]
@@ -275,9 +269,13 @@ class PlotApp(QMainWindow):
 
         # Plot data on respective plot widgets
         self.rpm_plot_widget.plot(sample_ids, tach_rpms, pen='b', name='Tach')
-        self.rpm_plot_widget.plot(sample_ids, s3_rpms, pen='g', name='R_whl')
+        self.rpm_plot_widget.plot(sample_ids, rwhl_rpms, pen='g', name='RWHL')
+        self.rpm_plot_widget.plot(sample_ids, s3_rpms, pen='c', name='Clutch(S3)')
         self.rpm_plot_widget.plotItem.getAxis('left').setWidth(int(self.axis_width))
         self.rpm_plot_widget.plotItem.getAxis('right').setWidth(int(40))
+        # Plot data on the secondary y-axis (( CLUTCH SLIP))
+        clutch_slip_curve = pg.PlotDataItem(sample_ids, clutch_slip, pen='orange', name='Clutch slip')
+        self.clutch_slip_view.addItem(clutch_slip_curve)
         
         self.temp_plot_widget.plot(sample_ids, temp_front, pen='r', name='Front')
         self.temp_plot_widget.plot(sample_ids, temp_back, pen='y', name='Back')

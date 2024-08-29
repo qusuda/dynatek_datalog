@@ -58,14 +58,24 @@ class DataPoint:
         
         # Convert to real values
         self.g_force = self.ana_ch2 + 1.0 - 0.49
-        #self.temperature_front = fahrenheit_to_celsius(self.ana_ch5 * 400)
-        #self.temperature_back = fahrenheit_to_celsius(self.ana_ch6 * 400)
         self.temperature_front = self.ana_ch5 * 222 + 32
         self.temperature_back = self.ana_ch6 * 222 + 32
         self.fuel_pressure = (self.ana_ch1 * 60) - 30.0
-        #self.fuel_pressure = self.ana_ch1
         self.throttle = self.ana_ch4 / 5.0 * 100
+        
+        # Calculate clutch_slip
+        if(self.switch1):
+            # First gear ratio
+            gear_ratio = 1
+        else:
+            # Second gear ratio
+            gear_ratio = 1.6  # RWHL_
 
+        if(self.s3_rpm):
+            self.clutch_slip = (self.s3_rpm - (self.rwhl_rpm / gear_ratio )) / self.s3_rpm * 100
+        else:
+            self.clutch_slip = 100
+    
     def init_from_serial_data(self, chunk_data):
         """ Init data point from raw serial data chunk"""
         struct_format = '>BBHHBBBBBBHHBBBBBBBBHB'

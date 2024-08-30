@@ -16,7 +16,11 @@ DEFAULT_COM_PORT = 'COM3'  # Change this to your COM port
 BAUD_RATE = 9600
 
 
-sim_file = "/Users/anders/Code/dynatek_datalog/test/input_simulation.log"
+
+sim_file = ""
+#sim_file = "test/input_simulation.log"
+
+
 
 def live(port, live_data_cb):
     """Function downloading data"""

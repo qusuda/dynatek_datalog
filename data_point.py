@@ -26,7 +26,7 @@ class DataPoint:
         if unpacked_data[2] != 0:
             self.rwhl_rpm = int(3000000 / unpacked_data[2])
         else:
-            self.rwhl_rpm = 0.0
+            self.rwhl_rpm = int(0)
         if unpacked_data[3] != 0:
             self.tach_rpm = int(3000000 / unpacked_data[3])
         else:
@@ -61,7 +61,7 @@ class DataPoint:
         self.temperature_front = self.ana_ch5 * 222 + 32
         self.temperature_back = self.ana_ch6 * 222 + 32
         self.fuel_pressure = (self.ana_ch1 * 60) - 30.0
-        self.throttle = self.ana_ch4 / 5.0 * 100
+        self.throttle = self.ana_ch4 / 2.76 * 100
         
         # Calculate clutch_slip
         if(self.switch1):

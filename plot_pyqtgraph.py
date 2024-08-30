@@ -217,6 +217,10 @@ class PlotApp(QMainWindow):
         self.clutch_slip_view.setGeometry(self.rpm_plot_widget.plotItem.vb.sceneBoundingRect())
         self.clutch_slip_view.linkedViewChanged(self.rpm_plot_widget.plotItem.vb, self.clutch_slip_view.XAxis)
 
+    def get_data_point(self, time):
+        #print(f'Get data at time: {time}')
+        data_point = self.data_points[int(time*100)]
+        return data_point
 
     # Link cursors
     def mouseMoved(self, event):
@@ -239,11 +243,13 @@ class PlotApp(QMainWindow):
         self.throttle_vLine.setPos(mousePoint.x())
         self.g_force_vLine.setPos(mousePoint.x())
         self.gear_vLine.setPos(mousePoint.x())
-        self.cursor_label.setText(f'Time: {mousePoint.x():.2f}, RPM: {mousePoint.y():.0f}')
+        #self.cursor_label.setText(f'Time: {mousePoint.x():.2f}, RPM: {mousePoint.y():.0f}')
+        dp = self.get_data_point(mousePoint.x())
+        self.cursor_label.setText(f'Time: {mousePoint.x():.2f}, RPM {dp.tach_rpm} Temp {dp.temperature_front:.0f} / {dp.temperature_back:.0f} ') 
 
     def plot(self, data_points, event):
         print("Plot")
-
+        self.data_points = data_points
         self.event_label.setText(f'<H1>{event}</H1>')
 
         # Extracting data members for plotting

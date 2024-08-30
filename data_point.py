@@ -44,6 +44,10 @@ class DataPoint:
             self.s3_rpm = int(3000000 / unpacked_data[10])
         else:
             self.s3_rpm = 0
+
+        if self.s3_rpm < 200:
+            self.s3_rpm = 0
+
         self.s4_rpm = unpacked_data[11]
         self.ana_ch12 = float(unpacked_data[12]) / 255 * 5.0
         self.ana_ch11 = float(unpacked_data[13]) / 255 * 5.0
@@ -71,8 +75,11 @@ class DataPoint:
             # Second gear ratio
             gear_ratio = 1.6  # RWHL_
 
+        tach_vs_s3_ratio = 1.1515 #  77 vs 67
+
         if(self.s3_rpm):
-            self.clutch_slip = (self.s3_rpm - (self.rwhl_rpm / gear_ratio )) / self.s3_rpm * 100
+            self.clutch_slip = ((self.tach_rpm / tach_vs_s3_ratio) - (self.s3_rpm)) / (self.tach_rpm) * 100
+
         else:
             self.clutch_slip = 100
     

@@ -101,10 +101,12 @@ class DataPoint:
         # Calculate clutch_slip
         if(self.switch1):
             # First gear ratio
-            gear_ratio = 1
+            self.gear = 1
+            gear_ratio = 0.7
         else:
             # Second gear ratio
-            gear_ratio = 1.6  # RWHL_
+            self.gear = 2
+            gear_ratio = 1  # RWHL_
 
         tach_vs_s3_ratio = 1.1515 #  77 vs 67
 

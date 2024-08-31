@@ -2,6 +2,8 @@ import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QCheckBox, QLabel
 import pyqtgraph as pg
 
+from PyQt6.QtGui import QFont
+
 import parse as dynaplot
 
 class PlotApp(QMainWindow):
@@ -79,6 +81,11 @@ class PlotApp(QMainWindow):
 
         # Cursor position label
         self.cursor_label = QLabel('')
+        font = QFont('Courier New')  # Specify a common monospaced font
+        self.cursor_label.setFont(font)
+        font.setStyleHint(QFont.StyleHint.Monospace)  # Ensure it's monospaced
+        self.cursor_label.setFont(font)
+
         self.layout.addWidget(self.cursor_label)
 
         # Connect mouse move event to RPM Plot
@@ -175,6 +182,11 @@ class PlotApp(QMainWindow):
         self.gear_plot_widget.getViewBox().sigXRangeChanged.connect(self.syncX)
         self.g_force_plot_widget.getViewBox().sigXRangeChanged.connect(self.syncX)
 
+        self.g_force_checkbox.setChecked(False)
+        self.temperature_checkbox.setChecked(False)
+        self.throttle_checkbox.setChecked(False)
+        self.gear_switch_checkbox.setChecked(False)
+
 
     def onGForceCheckBoxStateChanged(self, state):
         if state == 2:  # Checked
@@ -219,8 +231,10 @@ class PlotApp(QMainWindow):
 
     def get_data_point(self, time):
         #print(f'Get data at time: {time}')
-        data_point = self.data_points[int(time*100)]
-        return data_point
+        if(time < 23):
+            return self.data_points[int(time*100)]
+        else:
+            return self.data_points[len(self.data_points) - 1]
 
     # Link cursors
     def mouseMoved(self, event):
@@ -245,7 +259,7 @@ class PlotApp(QMainWindow):
         self.gear_vLine.setPos(mousePoint.x())
         #self.cursor_label.setText(f'Time: {mousePoint.x():.2f}, RPM: {mousePoint.y():.0f}')
         dp = self.get_data_point(mousePoint.x())
-        self.cursor_label.setText(f'Time: {mousePoint.x():.2f}, RPM {dp.tach_rpm} - S3 {dp.s3_rpm} - RWHL {dp.rwhl_rpm}  Temp {dp.temperature_front:.0f} / {dp.temperature_back:.0f} ') 
+        self.cursor_label.setText(f'Time: {mousePoint.x():5.2f} - RPM {dp.tach_rpm:4d} - S3 {dp.s3_rpm:4d} - RWHL {dp.rwhl_rpm:4d} - Gear: {dp.gear} Throttle {dp.throttle:3.0f}% - Pressure {dp.fuel_pressure:3.0f} PSI - Temp(C) {dp.temperature_front:3.0f} / {dp.temperature_back:3.0f} (Diff: {dp.temperature_front-dp.temperature_back:.0f} )')
 
     def plot(self, data_points, event):
         print("Plot")

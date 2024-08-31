@@ -48,4 +48,15 @@ def filter(data_points):
             data_points[i-8].s3_rpm == data_points[i-9].s3_rpm):
             for j in range(i, i-10, -1):
                 data_points[j].s3_rpm = 0
+
+
+    for i in range(9, len(data_points)):
+        if (data_points[i].rwhl_rpm == data_points[i-1].rwhl_rpm == 
+            data_points[i-2].rwhl_rpm == data_points[i-3].rwhl_rpm == 
+            data_points[i-4].rwhl_rpm == data_points[i-5].rwhl_rpm == 
+            data_points[i-6].rwhl_rpm == data_points[i-7].rwhl_rpm == 
+            data_points[i-8].rwhl_rpm == data_points[i-9].rwhl_rpm):
+            for j in range(i, i-10, -1):
+                data_points[j].rwhl_rpm = 0
+
     return data_points

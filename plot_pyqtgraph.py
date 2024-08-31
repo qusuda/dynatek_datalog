@@ -245,7 +245,7 @@ class PlotApp(QMainWindow):
         self.gear_vLine.setPos(mousePoint.x())
         #self.cursor_label.setText(f'Time: {mousePoint.x():.2f}, RPM: {mousePoint.y():.0f}')
         dp = self.get_data_point(mousePoint.x())
-        self.cursor_label.setText(f'Time: {mousePoint.x():.2f}, RPM {dp.tach_rpm} Temp {dp.temperature_front:.0f} / {dp.temperature_back:.0f} ') 
+        self.cursor_label.setText(f'Time: {mousePoint.x():.2f}, RPM {dp.tach_rpm} - S3 {dp.s3_rpm} - RWHL {dp.rwhl_rpm}  Temp {dp.temperature_front:.0f} / {dp.temperature_back:.0f} ') 
 
     def plot(self, data_points, event):
         print("Plot")

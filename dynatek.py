@@ -69,6 +69,11 @@ class Worker(QObject):
         finally:
             self.is_running = False
 
+    def stop(self):
+        dynalog.download_cancel()
+        self.is_running = False
+        self.stop_signal.emit()
+
     def progress(self, state, pct):
         self.update_progress.emit(state, pct)
 
@@ -118,7 +123,13 @@ class MainWindow(QMainWindow):
         self.btn_download.setEnabled(True)
         self.btn_download.setText("Download")
 
+        # Cancel(Download)
+        self.btn_download_cancel = QPushButton()
+        self.btn_download_cancel.setEnabled(False)
+        self.btn_download_cancel.setText("Cancel")
+
         self.btn_download.clicked.connect(self.download_clicked)
+        self.btn_download_cancel.clicked.connect(self.download_cancel_clicked)
 
         # Create a label to display the image
         self.image_label = QLabel(self)
@@ -137,6 +148,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.btn_live_session)
         layout.addLayout(event_layout)
         layout.addWidget(self.btn_download)
+        layout.addWidget(self.btn_download_cancel)
 
         self.progress_download = QProgressBar()
         self.progress_download.minimum = 0
@@ -202,6 +214,7 @@ class MainWindow(QMainWindow):
 
     def download_clicked(self):
         self.btn_download.setEnabled(False)
+        self.btn_download_cancel.setEnabled(True)
         # Create a new worker and thread each time a download is initiated
         self.worker = Worker(self)
         self.worker_thread = QThread()
@@ -219,6 +232,12 @@ class MainWindow(QMainWindow):
         # Start the thread
         self.worker_thread.start()
         self.show_alert("Press button on datalogger to begin download")
+
+    def download_cancel_clicked(self):
+        print("Cancel download")
+        self.btn_download.setEnabled(True)
+        self.btn_download_cancel.setEnabled(False)
+        self.worker.stop()
 
     def cleanup_after_download(self):
         # Re-enable the button after the work is done
@@ -250,6 +269,8 @@ class MainWindow(QMainWindow):
         #if self.current_file > 0:
         self.current_file = self.line_edit_file.text() 
         data_points = dynaparse.parse_file(self.current_file, 27, 0)
+        data_points = dynaparse.filter(data_points)
+        dynaparse.process(data_points)
         # Create a new window (QMainWindow or QWidget)
         self.new_window = dynapyplot.PlotApp()  # You can also use QWidget()        
         # Show the new window

@@ -8,83 +8,14 @@ from PyQt6.QtCore import Qt, QObject, pyqtSignal, QThread, QSize
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QCheckBox, QRadioButton, QLabel, QProgressBar
 
-
 from data_point import DataPoint
 
 # COM port settings
 DEFAULT_COM_PORT = 'COM3'  # Change this to your COM port
 BAUD_RATE = 9600
 
-
-
 sim_file = ""
 #sim_file = "test/input_simulation.log"
-
-
-
-def live(port, live_data_cb):
-    """Function downloading data"""
-    ser = None
-    sync = None
-
-    chunk_bytes = bytearray()
-
-    if len(sim_file) > 0:
-        with open(sim_file, 'rb') as infile:
-            print(f"Reading binary data from {port} to {sim_file}...")
-            while True:
-                # Read binary data from COM port
-                data = infile.read(1)
-                if data:
-                    if data[0] == 0xAA:
-                        sync = True
-                    if sync:
-                        # Write binary data to file
-                        chunk_bytes.extend(data)
-                        if len(chunk_bytes) == 27:
-                            data_point = DataPoint(chunk_bytes)
-                            chunk_bytes.clear()
-                            sync = False
-                            if data_point:
-                                #data_point.print_live()
-                                if live_data_cb:
-                                    live_data_cb(data_point)
-                else:
-                    break
-                time.sleep(0.0001)
-    else:
-        try:
-            # Open COM port
-            ser = serial.Serial(port, BAUD_RATE, timeout=1)
-            if ser.is_open:
-                print(f"Serial port {port} opened successfully.")
-            print ("COM port opened")
-            while True:
-                # Read binary data from COM port
-                data = ser.read(1)
-                if data:
-                    if data[0] == 0xAA:
-                        sync = True
-                    if sync:
-                        # Write binary data to file
-                        chunk_bytes.extend(data)
-                        if len(chunk_bytes) == 27:
-                            data_point = DataPoint(chunk_bytes)
-                            chunk_bytes.clear()
-                            sync = False
-                            if data_point:
-                                #data_point.print_live()
-                                if live_data_cb:
-                                    live_data_cb(data_point)
-                # else:
-                #     break
-        except serial.SerialException as e:
-            print(f"Error: {e}")
-        finally:
-            if ser and ser.is_open:
-                ser.close()
-                print(f"Serial port {port} closed.")
-
 
 class LiveWorker(QObject):
     update_live = pyqtSignal(DataPoint)
@@ -97,22 +28,78 @@ class LiveWorker(QObject):
         self.is_running = True
 
     def do_work(self):
-        live(self.com_port, self.live)
-
-        # try:
-        #     self.main_window.current_file = dynalog.download(
-        #         self.main_window.line_edit_com_port.text(), 
-        #         self.main_window.line_edit_event.text(), 
-        #         self.progress
-        #     )
-        #     self.main_window.line_edit_file.setText(self.main_window.current_file)
-        # except Exception as e:
-        #     self.update_progress.emit(f"Error: {str(e)}", 0)
-        # finally:
-        #     self.is_running = False
+        self.live_work(self.com_port, self.live)
 
     def live(self, data_point):
         self.update_live.emit(data_point)
+
+    def stop(self):
+        self.is_running = False
+        
+    def live_work(self, port, live_data_cb):
+        """Function downloading data"""
+        ser = None
+        sync = None
+
+        chunk_bytes = bytearray()
+
+        if len(sim_file) > 0:
+            with open(sim_file, 'rb') as infile:
+                print(f"Reading binary data from {port} to {sim_file}...")
+                while self.is_running:
+                    # Read binary data from COM port
+                    data = infile.read(1)
+                    if data:
+                        if data[0] == 0xAA:
+                            sync = True
+                        if sync:
+                            # Write binary data to file
+                            chunk_bytes.extend(data)
+                            if len(chunk_bytes) == 27:
+                                data_point = DataPoint(chunk_bytes)
+                                data_point.process()
+                                chunk_bytes.clear()
+                                sync = False
+                                if data_point:
+                                    #data_point.print_live()
+                                    if live_data_cb:
+                                        live_data_cb(data_point)
+                    else:
+                        break
+                    time.sleep(0.0001)
+        else:
+            try:
+                # Open COM port
+                ser = serial.Serial(port, BAUD_RATE, timeout=1)
+                if ser.is_open:
+                    print(f"Serial port {port} opened successfully.")
+                print ("COM port opened")
+                while self.is_running:
+                    # Read binary data from COM port
+                    data = ser.read(1)
+                    if data:
+                        if data[0] == 0xAA:
+                            sync = True
+                        if sync:
+                            # Write binary data to file
+                            chunk_bytes.extend(data)
+                            if len(chunk_bytes) == 27:
+                                data_point = DataPoint(chunk_bytes)
+                                data_point.process()
+                                chunk_bytes.clear()
+                                sync = False
+                                if data_point:
+                                    #data_point.print_live()
+                                    if live_data_cb:
+                                        live_data_cb(data_point)
+                    # else:
+                    #     break
+            except serial.SerialException as e:
+                print(f"Error: {e}")
+            finally:
+                if ser and ser.is_open:
+                    ser.close()
+                    print(f"Serial port {port} closed.")
 
 class LiveApp(QMainWindow):
     def __init__(self, com_port):
@@ -262,6 +249,12 @@ class LiveApp(QMainWindow):
         self.sw_layout.addWidget(self.sw3_button)
         self.sw_layout.addWidget(self.sw4_button)
         self.layout.addLayout(self.sw_layout)
+
+    def closeEvent(self, event):
+        print(f"Live application closed")
+        self.live_worker.stop()
+        #self.live_worker.stop_signal.emit()
+        print(f"Live App closed (Terminate thread)")
 
     def live_data_callback(self, data_point):
         print(f"Callback function called with result: {data_point}")

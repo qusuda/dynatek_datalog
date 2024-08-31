@@ -17,6 +17,8 @@ sim_file = ""
 
 expected_data_cnt = 62235 
 
+download_running = True
+
 if len(sim_file):
     expected_data_cnt = 62233
 
@@ -24,6 +26,8 @@ def download(port, event, progress_cb):
     """Function downloading data"""
     ser = None
     sync = None
+    global download_running
+    download_running = True
 
     # Generate file name with timestamp
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
@@ -43,7 +47,7 @@ def download(port, event, progress_cb):
             # Open file for writing binary data
             with open(output_file, 'wb') as file:
                 print(f"Writing binary data from {port} to {output_file}...")
-                while True:
+                while download_running:
                     # Read binary data from COM port
                     data = infile.read(1)
                     if data:
@@ -74,7 +78,7 @@ def download(port, event, progress_cb):
             # Open file for writing binary data
             with open(output_file, 'wb') as file:
                 print(f"Writing binary data from {port} to {output_file}...")
-                while True:
+                while download_running:
                     # Read binary data from COM port
                     data = ser.read(1)
                     #print(data)
@@ -104,6 +108,11 @@ def download(port, event, progress_cb):
                 print(f"Serial port {port} closed.")
 
     return output_file
+
+def download_cancel():
+    global download_running
+    download_running = False
+
 
 if __name__ == "__main__":
     COM_PORT = DEFAULT_COM_PORT
